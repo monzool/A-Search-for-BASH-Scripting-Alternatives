@@ -17,9 +17,9 @@
 
 **Bash scripting is** http://mywiki.wooledge.org/BashWeaknesses
 
-It is no secret that bash scripting has its pitfalls and oddities. Subtle mistakes are easy to make given its many quirks and archane syntax rules. So this documents seek to invistigate if a language can be found which embodies the "Bash - the good parts" only.
+It is no secret that bash scripting has its pitfalls and oddities. Subtle mistakes are easy to make given its many quirks and arcane syntax rules. So this documents seek to investigate if a language can be found which embodies the "Bash - the good parts" only.
 
-The idea for this document originated at my place of work. Our products are linux based, and in the development department all local workstations are Ubuntu installations, so bash scripting is a part of the heritage that automatically comes from using a linux system. Most co-workers will use bash for a quick means to and end to automate some build steps or tweaking testing facilities. A minor group use bash for configuring and tweaking an embedded linux platform. Bash scripts *can* be simple, but most often scripts grow in size and complexity over time and bugs will sneak in. Other times a script is rushed and the implementer is fooled by the, at first sight, simplicty of bash and falls into its many pittfalls and bugs appear in even small scripts.
+The idea for this document originated at my place of work. Our products are linux based, and in the development department all local workstations are Ubuntu installations, so bash scripting is a part of the heritage that automatically comes from using a linux system. Most co-workers will use bash for a quick means to and end to automate some build steps or tweaking testing facilities. A minor group use bash for configuring and tweaking an embedded linux platform. Bash scripts *can* be simple, but most often scripts grow in size and complexity over time and bugs will sneak in. Other times a script is rushed and the implementer is fooled by the, at first sight, simplicity of bash and falls into its many pitfalls and bugs appear in even small scripts.
 
 It is my experience that most bash scripts have bugs or are of low quality. Writing correct and safe bash scripts is hard. Having personally written a rather large umbrella build system in bash for one of our more advanced products, it became clear to me that an alternative to bash needs to be embraced.
 
@@ -37,7 +37,7 @@ It is my experience that most bash scripts have bugs or are of low quality. Writ
 *   Must be production ready, i.e. mature and preferably more that one maintainer.
 *   Must have a license that is permissive of commercial usage and embedding.
 
-A secondary objective is to find an embeddable scripting language. If the language could work as both a native scripting language and an embeddedable scripting language, it would be preferable. It must embed into a C/C++ ecosystem.
+A secondary objective is to find an embeddable scripting language. If the language could work as both a native scripting language and an embeddable scripting language, it would be preferable. It must embed into a C/C++ ecosystem.
 
 
 ## 2. Not Meeting Criterias
@@ -46,7 +46,7 @@ A secondary objective is to find an embeddable scripting language. If the langua
 
 This contender actually has a lot of proven history, and surely would do the task at hand. But the Perl stack is rather large. There are smaller options like microperl<sup>[1]</sup> and miniperl, tinyperl<sup>[2]</sup>, but generally it seems that the recommendation is to look elsewhere than Perl, if targeting a small embedded platform<sup>[3]</sup>. There is also the more subjective argument, that perl is a bit dated and "unsexy" language with complex syntax.
 
-What speaks in perls favour, is that its inherintly very suited for scripting, and have a long pedigree as a more versitile alternative for bash.
+What speaks in perls favor, is that its inherently very suited for scripting, and have a long pedigree as a more versatile alternative for bash.
 
 Various techniques known from bash is supported, e.g.: HEREDOC
 ```perl
@@ -91,7 +91,7 @@ Links:
 
 ### python
 
-Python is an easy learned language and is very versitile. Good shell script libraries and abstractions exists for python<sup>[1,2,3,4]</sup>. The best might be xonsh<sup>[5]</sup> which provides a pythonic interactive shell, as wells as easy access to system programs like `grep` and `find` etc.
+Python is an easy learned language and is very versatile. Good shell script libraries and abstractions exists for python<sup>[1,2,3,4]</sup>. The best might be xonsh<sup>[5]</sup> which provides a pythonic interactive shell, as wells as easy access to system programs like `grep` and `find` etc.
 
 Given its "batteries included" profile, Python is quite heavy in the install size, and thus not fitting well on an embedded system. Only a few alternatives exists for reduced size python implementations. An old (unmaintained, batteries not included) distribution tinypy<sup>[6]</sup> and eGenix PyRun<sup>[7]</sup> which packs a python distribution down to about 11 MiB.
 
@@ -110,7 +110,7 @@ Links:
 
 ### TCL
 
-This script language is in the kind of Perl being very versitile, having lots of libraries but also suffer from large install size and also having a syntax feels a bit outdated and unfriendly. TCL has two functions for calling system commands: `open` and `exec` which provides for system calls <sup>[1]</sup>. It is not a seamless port from bash as the commands have their own special syntax:
+This script language is in the kind of Perl being very versatile, having lots of libraries but also suffer from large install size and also having a syntax feels a bit outdated and unfriendly. TCL has two functions for calling system commands: `open` and `exec` which provides for system calls <sup>[1]</sup>. It is not a seamless port from bash as the commands have their own special syntax:
 
 ```tcl
 exec ls {*}[glob *.tcl]
@@ -120,7 +120,7 @@ First impressions of TCL's pipelining handling is that it is rather cumbersome<s
 The TCL language is very flexible in its dynamic nature and do enable it to extend itself in a lisp like way. Opinions of TCL is many and contradicting<sup>3</sup>
 
 Jim<sup>[4]</sup> is a smaller edition of TCL, so the size impact of a TCL installation could be reduced if using that.
-A few other languages target the TCL vm. One such is Little<sup>[5]</sup> wich have a nicer abtraction upon the `exec` call.
+A few other languages target the TCL vm. One such is Little<sup>[5]</sup> which have a nicer abstraction upon the `exec` call.
 
 Links:
 
@@ -159,13 +159,13 @@ Links:
 
 ### shcaml
 
-shcaml reminds a lot of scsh. It provides a wide range of user functions, system call wrappers and bash like funtionality
+shcaml reminds a lot of scsh. It provides a wide range of user functions, system call wrappers and bash like functionality
 
 >Unix shells provide easy access to Unix functionality such as pipes, signals, file descriptor manipulation, and the file system. Shcaml hopes to excel at these same tasks.
 
 With its _UsrBin_<sup>[1]</sup> module, often used function like `ls`, `ps` etc. are available.
 
-The _Fitting_<sup>[2]</sup> module emulates common shell behaviours. E.g: redirecting to `/dev/null` can be done
+The _Fitting_<sup>[2]</sup> module emulates common shell behaviors. E.g: redirecting to `/dev/null` can be done
 
 ```ocaml
 run (command "echo hello" />/ [ stdout />* `Null ]);;
@@ -181,7 +181,7 @@ Links:
 
 ### Julia
 
-Julia has pretty good interop with shell commands built in<sup>[1]</sup>. But unfurtenuately its not that a light weight installation.
+Julia has pretty good interop with shell commands built in<sup>[1]</sup>. But unfortunately its not that a light weight installation.
 
 Links:
 
@@ -192,7 +192,7 @@ Links:
 
 Wren is a very attractive language with great syntax and excellent C/C++ interop. It is written in C and is very portable. Wren can be used both standalone or embedded.
 
-Unfortenuately I could not find any evidence of it being able to do system calls. The _system_ module<sup>[1]</sup> in its core library seems limited to mainly screen printing.
+Unfortunately I could not find any evidence of it being able to do system calls. The _system_ module<sup>[1]</sup> in its core library seems limited to mainly screen printing.
 
 The documentation is also very incomplete. For example the chapter on how to use it embedded in C:
 
@@ -216,7 +216,7 @@ Links:
 
 ### Dart
 
-Good support for stdout, stderr, stdin and environment<sup>[1]</sup> The `Process.run`<sup>[2]</sup> provides convinient access to system tools.
+Good support for stdout, stderr, stdin and environment<sup>[1]</sup> The `Process.run`<sup>[2]</sup> provides convenient access to system tools.
 
 ```dart
 Process.run('grep', ['-i', 'main', 'test.dart']).then((result) {
@@ -225,7 +225,7 @@ Process.run('grep', ['-i', 'main', 'test.dart']).then((result) {
 });
 ```
 
-Dart also has a solution for handling pipes. Elbeit this is not as seamless compared to how bash does it, but it seems to work well.
+Dart also has a solution for handling pipes. Albeit this is not as seamless compared to how bash does it, but it seems to work well.
 
 ```dart
 import 'dart:io';
@@ -253,7 +253,7 @@ Links:
 
 ### duktape
 
-JavaScript is among the hottest languages right now. Several embeddable JavaScript enginens exists, but what appears to be the most used in embedded scenarios, is the `duktape` engine.
+JavaScript is among the hottest languages right now. Several embeddable JavaScript engines exists, but what appears to be the most used in embedded scenarios, is the `duktape` engine.
 
 It opens up to an alternative strategy of using one of the many JavaScript transpilers to do scripting in an entirely different language - although the level of indirection would probably be to high ;-)
 
@@ -281,7 +281,7 @@ Links:
 
 ### powscript
 
-powscript is a language that transpiles to bash. This makes it very portable - in theory. Unfortuneatly it targets bash-4 only
+powscript is a language that transpiles to bash. This makes it very portable - in theory. Unfortunately it targets bash-4 only
 >written/generated for bash >= 4.x, 'zero'-dependency solution
 
 A lot of features have been added to bash-4, and the busybox shell (ash) does not support many of the new features and syntax additions.
@@ -307,7 +307,7 @@ Links:
 
 ### oh
 
-Oh is a bash replacement that descibes its scripting language as:
+Oh is a bash replacement that describes its scripting language as:
 > a heavily modified dialect of the Scheme programming language, complete with first-class continuations and proper tail recursion.
 
 The documentation<sup>1</sup> is in the better end of "home brewed" shells, but is still pretty sparse.
@@ -358,7 +358,7 @@ env CC=/usr/local/arm-2007q3/bin/arm-none-linux-gnueabi-gcc CGO_ENABLED=1 GOARM=
 The stripped binary weights in at a hefty 4.6 MB.
 
 
-Being a read-only filesystem, I had to relocated `$HOME` to a writeable directory
+Being a read-only filesystem, I had to relocated `$HOME` to a writable directory
 ```shell
 arm-target» env HOME=/var/ elvish
 ```
@@ -376,7 +376,7 @@ Links:
 ### oilshell
 
 An interesting project of a total bash replacement with implementation decisions discussed in detailed blog posts by the author. The level of meticulously documentation, testing and benchmarking done by the author is quite impressive.
-Not production ready and not sure if the, build with python technology, disqualifies it for small embedded planforms anyway.
+Not production ready and not sure if the, build with python technology, disqualifies it for small embedded platforms anyway.
 
 The author of oil maintains an excellent list of shells and shell scripting languages<sup>1</sup>
 
@@ -388,11 +388,11 @@ Links:
 
 ### murex
 
-murex is a rather young project (first github commit in april 2017).
+murex is a rather young project (first github commit in April 2017).
 
 >Murex is a cross-platform shell like Bash but with greater emphasis on writing safe shell scripts and powerful one-liners while maintaining readability.
 
-What murex really gets right is the terness and expressivenes with few artifacts. Its very much the power of bash, just better and safer.
+What murex really gets right is the terseness and expressiveness with few artifacts. Its very much the power of bash, just better and safer.
 
 As with the other go-lang based shells, the readline functionality is not working in the cross-compiled edition.
 
@@ -425,7 +425,7 @@ The documentation is quite spares, or practically non-existing. This is from the
 (system cmd . args)
 (system? cmd)
 
-This might (?) be enought for a seasoned schemer, but for the intented target of scheme n00bs, this is not good enough.
+This might (?) be enough for a seasoned schemer, but for the intended target of scheme n00bs, this is not good enough.
 
 As an example, I still have to figure out what the difference between `execute` and `system` is. Not to mention, figure out how to run the command
 
@@ -462,7 +462,7 @@ Installation size:
 2.4M    total
 ```
 
-A first glance cross-compiling seems a bit "home grown" and being dependant on having target specific description files<sup>2</sup>. It is unclear if the one existing arm target could be used.
+A first glance cross-compiling seems a bit "home grown" and being dependent on having target specific description files<sup>2</sup>. It is unclear if the one existing arm target could be used.
 
 chez can run as an interpreter, but that eliminates some functionality like foreign calls and others<sup>3</sup>.
 
@@ -483,7 +483,7 @@ There is no scsh equivalent for gauche, but instead gauche have a subprocess lib
 (run-process-pipeline '((ls -l) (grep "\\.[ch]$") (wc)) :wait #t)
 ```
 
-From comments in a gauche commit<sup>[3]</sup>, it looks like a scsh alike interface is on the wishlist
+From comments in a gauche commit<sup>[3]</sup>, it looks like a scsh alike interface is on the wish list
 
 ```diff
 +;; We might adopt scsh-like process forms eventually, but finding an
@@ -513,7 +513,7 @@ Looking at the Ubuntu packaging of gauche, its size bloats a bit
 ```
 A total of 7.7 MB seems quite too much. It is unclear to me if some or more of the share files and libraries can be excluded from a final target installation
 
-Besides... an often reoccuring issue with Gauche is that it won't compile. This time around:
+Besides... an often reoccurring issue with Gauche is that it won't compile. This time around:
 
 ```shell
 » ./configure --enable-multibyte=utf-8 --enable-tls=none --with-dbm=no --prefix=/usr
@@ -539,7 +539,7 @@ Links:
 
 ### squirrel
 
-Squirrel reminds a lot of Lua. It is tailored for embedding into C/C++ programs, but can be used as a standalone scripting language as wel.
+Squirrel reminds a lot of Lua. It is tailored for embedding into C/C++ programs, but can be used as a standalone scripting language as well.
 
 >squirrel's syntax is similar to C/C++/Java etc... but the language has a very dynamic nature like Python/Lua etc...
 
@@ -562,10 +562,10 @@ mruby is a lightweight implementation of the Ruby language. It supports a multit
 
 A lot of extension libraries<sup>[2]</sup> exists for mruby. In context of this document, one of the more amusing is an extension that allows mruby to execute Lua<sup>[3]</sup>.
 
-Like Lua, mruby only provides the core of a script language. It appears that many expected features, like e.g. convienient file and directory handling, environment manipulation and errno, are provided by community libraries.
+Like Lua, mruby only provides the core of a script language. It appears that many expected features, like e.g. convenient file and directory handling, environment manipulation and errno, are provided by community libraries.
 
 
-While mruby promises ruby compatibility, a blog post from 2014<sup>4</sup> complains about the hartaches of porting ruby code to mruby.
+While mruby promises ruby compatibility, a blog post from 2014<sup>4</sup> complains about the heartaches of porting ruby code to mruby.
 
 An example from the blog:
 
@@ -582,7 +582,7 @@ $ mruby -e "p File.join ['a', 'b', 'c']"
 ```
 
 <br>
-The target installation process is a bit unconventional - but actually is quite usefull for a static embedded environment. During build of mruby all desired extensions and libraries are set in the build configuration, and the ending build will include only what was enabled. An answer on the [arduino forum](https://forum.arduino.cc) formulates its like this:
+The target installation process is a bit unconventional - but actually is quite useful for a static embedded environment. During build of mruby all desired extensions and libraries are set in the build configuration, and the ending build will include only what was enabled. An answer on the [arduino forum](https://forum.arduino.cc) formulates its like this:
 
 >Main advantage of mruby over ruby is size, which can be crucial on embedded systems. The sole mruby executable weights 2.2Mb and it is completely self contained, including most of the standard library, plus commodities like RegExp, IO, Socket, File, and the Yun module. The mruby-gems, rather than being loaded and parsed runtime, are precompiled into byte code at build time, and directly statically linked into the executable. Once you have a cross-build system is rather easy to build a custom mruby interpreter with a custom set of gems. Furthermore, mruby-gems can easily mix methods implemented in C or mruby in the same class/module.
 
@@ -597,7 +597,7 @@ gem install mgem
 ```
 
 A main reason for even looking a mruby, is the reputation of the scripster<sup>[6]</sup> library that runs on ruby. It is an excellent abstraction to make shell commands seem as first class citizens in the ruby language.
-mruby does not inhirently support `require`. This means a lot of scripts wont run out of the box (including scripster). An mgem plugin 'mgem-require' however exist to provide this functionality. To use this, it is required that the support is compiled in into mruby<sup>[7]</sup>.
+mruby does not inherently support `require`. This means a lot of scripts wont run out of the box (including scripster). An mgem plugin 'mgem-require' however exist to provide this functionality. To use this, it is required that the support is compiled in into mruby<sup>[7]</sup>.
 
 The build system of mruby is a NIH'ed non-standard system. Its simple for a default standard build, but gets a bit confusing when it comes to the cross-compiling. The library edition of mruby cross-compiles simply to a static library. But if wanting it as a shared library you are out of luck<sup>8</sup>. Following the cross-compile guide does not output a cross-compiled instance of the mruby interpreter. Adding the binaries specifically for generation in `build_config.rb` takes care of that though:
 
@@ -626,15 +626,15 @@ Links:
 ### scsh
 
 scsh is written in Scheme48 which originates back in 1986, but is still actively updated. Scheme48 is written in PreScheme which is a statically-typed dialect of Scheme.
-By own enmission, scsh is not suitable for an interactive shell, as many features for this is not implemented yet. However scsh is a very complete and well thought abstraction over the requirements and needs used in scripting and calling system commands.
+By own emission, scsh is not suitable for an interactive shell, as many features for this is not implemented yet. However scsh is a very complete and well thought abstraction over the requirements and needs used in scripting and calling system commands.
 
 > Scsh spans a wide range of application, from “script” applications usually handled with perl or sh, to more standard systems applications usually written in C
 
-scsh have very extensive system support, e.g. functions for networking, string manipulations, regex, file manipulations and many more exists. Also more specifialized features as creating fifos and file locks are supported. scsh provides its own abstraction over system calls and have parted from traditional error handling, and instead opted for an exception based error mechanism.
+scsh have very extensive system support, e.g. functions for networking, string manipulations, regex, file manipulations and many more exists. Also more specialized features as creating fifos and file locks are supported. scsh provides its own abstraction over system calls and have parted from traditional error handling, and instead opted for an exception based error mechanism.
 
 >System call error exceptions contain the Unix errno code reported by the system call. Unlike C, the errno value is a part of the exception packet, it is not accessed through a global variable.
 
-It is clear that the creators of scsh have great knowledge of how the underlaying OS works and operates, and have gone lengths to chose sane default behaviours. Examples are the mentioned decision, to consistantly use exceptions to allow free use of return values. Another example is the handling of _EINTR_ for which the wanted solution you almost always want, is the exact default chosen:
+It is clear that the creators of scsh have great knowledge of how the underlaying OS works and operates, and have gone lengths to chose sane default behaviors. Examples are the mentioned decision, to consistently use exceptions to allow free use of return values. Another example is the handling of _EINTR_ for which the wanted solution you almost always want, is the exact default chosen:
 
 >System calls never return error/intr - they automatically retry.<
 
@@ -643,7 +643,7 @@ A nice feature of scsh is the optional feature of compiling the scripts to eithe
 >Scsh programs can be pre-compiled to byte-codes and dumped as raw, binary heap images. Writing heap images strips out unused portions of the scsh runtime (such as the compiler, the debugger, and other complex subsystems), reducing memory demands and saving loading and compilation times. The heap image format allows for an initial `#!/usr/local/lib/scsh/scshvm` trigger on the first line of the image, making heap images directly executable as another kind of shell script.
 >Finally, scsh's static linker system allows dumped heap images to be com- piled to a raw Unix a.out(5) format, which can be linked into the text section of the vm binary. This produces a true Unix executable binary file.
 
-All the above sounds very promising. The prevaling comments from people using scsh in real life is however, that it has some annoying problems when used as a script language<sup>1</sup>. Its module inclusion is not really tailered for being called as a shebang script. Error messages are missing location of origin and debugging is quite cumbersome. Generally debugging scsh scripts is though of as a major PITA.
+All the above sounds very promising. The prevailing comments from people using scsh in real life is however, that it has some annoying problems when used as a script language<sup>1</sup>. Its module inclusion is not really trailered for being called as a shebang script. Error messages are missing location of origin and debugging is quite cumbersome. Generally debugging scsh scripts is though of as a major PITA.
 
 
 Links
@@ -655,7 +655,7 @@ Links
 
 ### luash
 
-Lua is in it self a great scripting language. It can be used standalone but also have a vast predigree of being embedded into c/c++ code where performance is a priority.
+Lua is in it self a great scripting language. It can be used standalone but also have a vast pedigree of being embedded into c/c++ code where performance is a priority.
 
 Lua in it self can call system programs using `os.execute`, or if output is needed, `io.popen`
 
@@ -665,9 +665,9 @@ local val = ps:read("*a")
 print(val)
 ```
 
-The above does the job, but its not that clean and soon you'll find yourself writing wrappers to make many succesive system calls more nicer looking. This is one of the things that luash provides.
+The above does the job, but its not that clean and soon you'll find yourself writing wrappers to make many successive system calls more nicer looking. This is one of the things that luash provides.
 
-In the next example luash takes advantage of a syntatic feature in Lua where, if the argument of a function is a string or a table constructor, the parens can be omitted. This makes for a nice clean syntax when calls are simple:
+In the next example luash takes advantage of a syntactic feature in Lua where, if the argument of a function is a string or a table constructor, the parens can be omitted. This makes for a nice clean syntax when calls are simple:
 
 ```lua
 -- $ ls /bin | grep $filter | wc -l
@@ -684,27 +684,27 @@ local u = uniq(sort({__input = words}))
 print(u)
 ```
 
-Due to some conflics between Lua and bash some commands need to be wrapped in a command call.
+Due to some conflicts between Lua and bash some commands need to be wrapped in a command call.
 
 ```lua
 local chrome = sh.command('google-chrome')   -- because '-' is an operator
 ```
 
-The `sh.command` functionality does however allow for some interesting composits.
+The `sh.command` functionality does however allow for some interesting composites.
 
 ```lua
 local gittag = sh.command('git', 'tag')   -- gittag(...) is same as git('tag', ...)
 gittag('-l')   -- list all git tags
 ```
 
-A shortcoming of Lua is a weak/lacking standard library<sup>[1]</sup>. LuaRocks, LuaDist and others now provide downloading managing of various libraries, but this does not transend very well into small embedded platforms and cross compiling. A general problem of Lua is the framentation between LuaJit, Lua-5.1, Lua-5.2 and Lua-5.3. Incompatibilities between those versions cause a lot of packages to only work on some of those. Also a prevailing problem in the Lua ecosystem is dormant unmaintained packages. The framgentation and relatively small package repository is considered a major problem within the community.
+A shortcoming of Lua is a weak/lacking standard library<sup>[1]</sup>. LuaRocks, LuaDist and others now provide downloading managing of various libraries, but this does not transcend very well into small embedded platforms and cross compiling. A general problem of Lua is the fragmentation between LuaJit, Lua-5.1, Lua-5.2 and Lua-5.3. Incompatibilities between those versions cause a lot of packages to only work on some of those. Also a prevailing problem in the Lua ecosystem is dormant unmaintained packages. The fragmentation and relatively small package repository is considered a major problem within the community.
 
 See appendix `B` for my example of a cross-compile configuration
-As with elvish, the repl line reader is completly borked and unusable. Not sure why this is...
+As with elvish, the repl line reader is completely borked and unusable. Not sure why this is...
 
 
 <br>
-The flexibility in the few rules in lua makes it somewhat akind to javascript, and makes it interesting as a transpiler target.
+The flexibility in the few rules in lua makes it somewhat akin to javascript, and makes it interesting as a transpiler target.
 
 MoonScript<sup>[2]</sup> is an object oriented language that is inspired by coffeescript.
 > It can be loaded directly from a Lua script without an intermediate compile step. It even knows how to tell you where errors occurred in the original file when they happen.
@@ -734,29 +734,29 @@ Links:
 ## 6. Finalists
 
 ### `scsh`
-from a technical point of view, scsh is by far the solution that appear most complete and best suited. It is dedicated for shellscripts and does it well. Its library and functions give a huge range of of supported funtionality. The obvious downside, is that the scheme language is not well known within the focus group, and will most likely discourage many people from using it. Also the PITA situation of debugging scripts is a major drawback.
-Using scsh would spawn the logic step of using a scheme based embedded language for mixing with C/C++ also. Scheme48 (upon wich scsh is based) or chibi would be the best choises.
-The language of scheme is very interesting academically, but during the writings of this document is it clear that "googling" for actual scheme snippets, help/hints and various library wrappers return very sparse and low quality results. Contrary to this is mruby and especially lua where snippets, hints and wrappers are abundently available.
+from a technical point of view, scsh is by far the solution that appear most complete and best suited. It is dedicated for shell scripts and does it well. Its library and functions give a huge range of of supported functionality. The obvious downside, is that the scheme language is not well known within the focus group, and will most likely discourage many people from using it. Also the PITA situation of debugging scripts is a major drawback.
+Using scsh would spawn the logic step of using a scheme based embedded language for mixing with C/C++ also. Scheme48 (upon which scsh is based) or chibi would be the best choices.
+The language of scheme is very interesting academically, but during the writings of this document is it clear that "googling" for actual scheme snippets, help/hints and various library wrappers return very sparse and low quality results. Contrary to this is mruby and especially lua where snippets, hints and wrappers are abundantly available.
 
 
 ### `luash`
 luash is very attractive in being a Lua library. Lua is pretty easy to learn and use, and would be more easy to adopt that e.g. the scheme based scsh
-Lua is praised for being a simple language but with great flixibility. It is certainly possible to build large programs in Lua, but it is also clear from digesting the comments on the world-wide-web, that the simplicity is also the acillies heel of the language, in forcing "do it yourself" solutions and patterns on everything. Its small and efficient, easy to learn - but a tad cumbersome and restricted. Bringing package dependencies into the mix, complicates the usage considerably.
+Lua is praised for being a simple language but with great flexibility. It is certainly possible to build large programs in Lua, but it is also clear from digesting the comments on the world-wide-web, that the simplicity is also the acillies heel of the language, in forcing "do it yourself" solutions and patterns on everything. Its small and efficient, easy to learn - but a tad cumbersome and restricted. Bringing package dependencies into the mix, complicates the usage considerably.
 
 
 ### `mruby`
-The question of "why not python", will be inevitable as that is the main scripting language used within the focus group. Python is much utilized in test scripts, automation and build systems, but fact is that Ruby has just as much to offer and provides same levels of flexible, exciting and productive scripting. The mruby community is really active and structured, and are in good progress of cloning the well known Ruby tools into the embedded mruby equivalent. Besides, no python derivative equivalent of mruby exits. Of the languages examined, mruby is supior to most in simplicity, expressivnes and capability.
+The question of "why not python", will be inevitable as that is the main scripting language used within the focus group. Python is much utilized in test scripts, automation and build systems, but fact is that Ruby has just as much to offer and provides same levels of flexible, exciting and productive scripting. The mruby community is really active and structured, and are in good progress of cloning the well known Ruby tools into the embedded mruby equivalent. Besides, no python derivative equivalent of mruby exits. Of the languages examined, mruby is superior to most in simplicity, expressiveness and capability.
 
 
 ## 7. Conclusion
 
 TL;DR: Winner is: lua (and mruby)
 
-A true native scripting spirited project like elvish, oh and the like would have been preferred. From trying out various languages it is clear to me that bash scripting is a special kind of domain, and most scripting languages does not transend especially well into that domain. Unfortuneatly the state of the tested alternatives are not worthy of production quality.
+A true native scripting spirited project like elvish, oh and the like would have been preferred. From trying out various languages it is clear to me that bash scripting is a special kind of domain, and most scripting languages does not transcend especially well into that domain. Unfortunately the state of the tested alternatives are not worthy of production quality.
 
-A split desicion for an alternative bash scripting languange is the conclusion for the  this document. Of the available contenders, lua and mruby would do equally great. For general purpose simple scripting lua have a slight advantage given the luash library.
+A split decision for an alternative bash scripting language is the conclusion for the  this document. Of the available contenders, lua and mruby would do equally great. For general purpose simple scripting lua have a slight advantage given the luash library.
 
-Regarding the secondary objective of finding an embedded scripting language, both mruby and lua will be excellent choices. The choice would mostly be about the extend that the scripting language is to be used. If the embedded scripting is to be a larger part of the model or logic, use the better language mruby. If embedding a scripting language is only for minor scripting facilites, go for the small and leaner language lua.
+Regarding the secondary objective of finding an embedded scripting language, both mruby and lua will be excellent choices. The choice would mostly be about the extend that the scripting language is to be used. If the embedded scripting is to be a larger part of the model or logic, use the better language mruby. If embedding a scripting language is only for minor scripting facilities, go for the small and leaner language lua.
 
 
 
