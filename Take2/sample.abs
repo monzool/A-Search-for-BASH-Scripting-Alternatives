@@ -1,0 +1,164 @@
+#!/usr/bin/env abs
+
+cli = require('@cli')
+
+
+# ① Enter script directory
+
+# ?
+
+
+# ② Parse arguments
+#=> Main
+
+
+# ③ Get file list
+
+f get_file_list(dir) {
+    files = `find $dir -type f`.lines()
+    return files
+}
+
+
+# ④ Split file names
+
+f get_extension(file) {
+    parts = file.split('.')
+    return parts[parts.len()-1]
+}
+
+f get_filename(file) {
+    parts = file.split('/')
+    filename = parts[parts.len()-1]
+    ext = get_extension(filename)
+
+    filename = filename.replace('.' + ext, '')
+    return filename
+}
+
+
+# ⑤ Categorize files by extension
+
+f categorize_files_by_extension(file_list) {
+    categorized_files = {}
+
+    for file in file_list {
+        extension = get_extension(file)
+        filename = get_filename(file)
+
+        if categorized_files[extension] == null {
+            categorized_files[extension] = []
+        }
+        categorized_files[extension] += [filename]
+    }
+    return categorized_files
+}
+
+
+# ⑥ Get a random number
+
+f get_random_number(upper) {
+    # Found no random number function. Fallback to shell command
+    # `$RANDOM` is not supported, so using /dev/urandom
+    random_number_str = `od -vAn -N2 -tu2 < /dev/urandom | tr -d '[:space:]'`.trim()
+    random_number = int(random_number_str)
+    return random_number % upper
+}
+
+
+# ⑦ Search text in a file
+
+f search_text_in_file(file, text) {
+    return `grep -q $text $file && echo "true" || echo "false"`.trim() == "true"
+}
+
+
+# ⑧ Print results
+
+f red() { exec("tput setaf 1") }
+f green() { exec("tput setaf 2") }
+f yellow() { exec("tput setaf 3") }
+f blue() { exec("tput setaf 4") }
+f magenta() { exec("tput setaf 5") }
+f color_reset() { exec("tput sgr0") }
+
+
+f make_printer(use_color) {
+    return f(prefix, color_fn, text) {
+        if use_color {
+            color_fn()
+            echo("$prefix$text")
+            color_reset()
+        } else {
+            echo("$prefix$text}")
+        }
+    }
+}
+
+f print_category(print_fn, extension, filenames) {
+    print_fn("Extension: ", blue, extension)
+
+    count = filenames.len()
+    print_fn("Count: ", green, count)
+
+    echo("Files:")
+    for _, filename in filenames {
+        print_fn("  ", magenta, filename)
+    }
+    echo()
+}
+
+f print_search(print_fn, search_result) {
+    echo("Search result:")
+    print_fn("  File: ", yellow, search_result[0])
+
+    print_fn("  Has search match: ",
+        f() {
+            if search_result[1] == true {
+                return green
+            } else {
+                return red
+            }
+        } (),
+        f() {
+            if search_result[1] == true {
+                return 'Yes'
+            } else {
+                return 'No'
+            }
+        } ()
+    )
+}
+
+
+# Main function
+
+@cli.cmd("run", "List files in directory", {"list-dir": "test", "no-color": "false"})
+f main(arguments, options) {
+    list_dir = options["list-dir"]
+    color = true
+    if options["no-color"] == "true" {
+        color = false
+    }
+
+    print_fn = make_printer(color)
+    file_list = get_file_list(list_dir)
+
+    # Categories
+    file_categories = categorize_files_by_extension(file_list)
+    for extension, filenames in file_categories {
+        print_category(print_fn, extension, filenames)
+    }
+
+    # Search
+    random_number = get_random_number(file_list.len())
+    search_file = file_list[random_number]
+    has_search_match = search_text_in_file(search_file, "monzool")
+    search_result = [search_file, has_search_match]
+    print_search(print_fn, search_result)
+
+    return 0
+}
+
+cli.run()
+

@@ -1,0 +1,200 @@
+#!/usr/bin/env ysh
+
+
+# ① Enter script directory
+
+cd $_this_dir
+
+
+# ② Parse arguments
+
+func matchArgs(args) {
+    var options = {
+        help: false
+        list_dir: "."
+        color: true
+    }
+
+    for item in (args) {
+        case (item) {
+            '-h'| '--help' {
+                    setvar options.help = true
+                }
+
+            / ('--list-dir=')+ / {
+                    setvar options.list_dir = item => replace("--list-dir=", "")
+                }
+
+            '--no-color' {
+                    setvar options["color"] = false
+                }
+        }
+    }
+
+    return (options)
+}
+
+func showHelp() {
+    echo "Usage: ./sample.ysh [options]"
+    echo "Options:"
+    echo "--list-dir <directory>      Directory to list. Default: current directory"
+    echo "--no-color                  Disable color output. Default: false"
+    echo "-h, --help                  Show help"
+}
+
+func setupOptions(args) {
+    var options = matchArgs(args)
+    if (options.help === true) {
+        call showHelp()
+        exit 0
+    }
+
+    if (options.list_dir === "") {
+        call showHelp()
+        exit 1
+    }
+
+    return (options)
+}
+
+
+# ③ Get file list
+
+proc get-file-list (dir) {
+    find $dir -type f
+}
+
+func getFileList(dir) {
+    var files_str = $(get-file-list $dir)
+    var files = split(files_str, b'\n')
+    return (files)
+}
+
+
+# ④ Split file names
+
+func getExtension(file) {
+    var parts = split(file, b'.')
+    return (parts[-1])
+}
+
+func getFilename(file) {
+    var parts = split(file, b'/')
+    var filename = parts[-1]
+    var ext = getExtension(filename)
+
+    return (filename => replace(".$ext", ""))
+}
+
+
+# ⑤ Categorize files by extension
+
+func categorizeFilesByExtension(file_list) {
+    var file_categories = {}
+    for file in (file_list) {
+        var extension = getExtension(file)
+        var filename = getFilename(file)
+
+        if (extension in file_categories) {
+            append $filename (file_categories[extension])
+        } else {
+            setvar file_categories[extension] = [ filename ]
+        }
+    }
+
+    return (file_categories)
+}
+
+
+# ⑥ Get a random number
+
+proc get-random-number (; upper) {
+    var rand = $( od -vAn -N2 -tu2 < /dev/urandom | tr -d '[:space:]' )
+    var value = (rand % upper)
+    echo $value
+}
+
+
+# ⑦ Search text in a file
+
+proc search-text-in-file (; file, text, out) {
+    try {
+        grep -q $text $file
+    }
+    case (_status) {
+        (0)    { call out->setValue(true) }
+        (else) { call out->setValue(false) }
+    }
+}
+
+proc search-text-in-file2 (; file, text) {
+    try {
+        grep -q $text $file
+    }
+    case (_status) {
+        (0)    { return true }
+        (else) { false }
+    }
+}
+
+
+# ⑧ Print results
+
+const yellow = b'\\e[33m'
+const blue = b'\\e[34m'
+const light_green = b'\\e[92m'
+const light_cyan = b'\\e[96m'
+const magenta_bg = b'\\e[45m'
+const color_reset = b'\\e[0m'
+
+
+proc color-print (; use_color, prefix, color, text) {
+    if (use_color) {
+        printf "%s$color%s$color_reset\\n" $prefix $text
+    } else {
+        printf "$text\\n"
+    }
+}
+
+proc print-category (; option_color, extension, filenames) {
+    color-print (option_color, "Extension: ", blue, extension)
+
+    var count = len(filenames)
+    color-print (option_color, "Count: ", light_green, count)
+    write "Files:"
+    for filename in (filenames) {
+        color-print (option_color, "  ", magenta_bg, filename)
+    }
+}
+
+proc print-search (; use_color, search_result) {
+    var search_file = search_result[0]
+    var has_search_match = search_result[1]
+
+    color-print (use_color, "Search file: ", light_cyan, search_file)
+    color-print (use_color, "Has search match: ", yellow, has_search_match)
+}
+
+
+# Main function
+
+proc main (; args) {
+    var options = setupOptions(args)
+    var file_list = getFileList(options.list_dir)
+
+    # Categories
+    var file_categories = categorizeFilesByExtension(file_list)
+    for extension, files in (file_categories) {
+        print-category (options.color, extension, files)
+    }
+
+    # Search
+    var random_number = $( get-random-number (len(file_list)) )
+    var search_file = file_list[int(random_number)]
+    var has_search_match
+    search-text-in-file (search_file, "monzool", &has_search_match)
+    var search_result = [search_file, has_search_match]
+    print-search (options.color, search_result)
+}
+
+main (ARGV)

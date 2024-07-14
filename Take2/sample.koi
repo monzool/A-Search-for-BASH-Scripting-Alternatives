@@ -1,0 +1,175 @@
+#!/usr/bin/env koi
+
+
+# ① Enter script directory
+
+# ?
+
+
+# ② Parse arguments
+
+# Program arguments are not possible?!
+let options = {
+    "list-dir": "test",
+    "color": true,
+}
+
+
+# ③ Get file list
+
+fn get_file_list(dir) {
+    let files = $(
+        find {dir} -type f
+    ).strip().split('\n')
+    return files
+}
+
+
+# ④ Split file names
+
+fn get_extension(file) {
+    let parts = file.split('.')
+    return parts[parts.len()-1]
+}
+
+fn get_filename(file) {
+    let parts = file.split('/')
+    let filename = parts[parts.len()-1]
+    let ext = get_extension(filename)
+
+    filename = filename.replace('.' + ext, '')
+    return filename
+}
+
+
+# ⑤ Categorize files by extension
+
+fn categorize_files_by_extension(file_list) {
+    let categorized_files = {}
+
+    for _, file in file_list {
+        let extension = get_extension(file)
+        let filename = get_filename(file)
+
+        if categorized_files.contains(extension) == false {
+            categorized_files[extension] = []
+        }
+        categorized_files[extension] += [filename]
+    }
+    return categorized_files
+}
+
+
+# ⑥ Get a random number
+
+fn get_random_number(upper) {
+    # Found no random number function. Fallback to shell command
+    # `$RANDOM` is not supported, so using /dev/urandom
+    let random_number = $(
+        od -vAn -N2 -tu2 < /dev/urandom | tr -d '[:space:]'
+    ).strip().parseNum()
+    return random_number % upper
+}
+
+
+# ⑦ Search text in a file
+
+fn search_text_in_file(file, text) {
+    return $(
+        grep -q {text} {file} && echo "true" || echo "false"
+    ).strip() == "true"
+}
+
+
+# ⑧ Print results
+
+fn red() {
+    tput setaf 1
+}
+fn green() {
+    tput setaf 2
+}
+fn yellow () {
+    tput setaf 3
+}
+fn blue() {
+    tput setaf 4
+}
+fn magenta_bg() {
+    tput setab 13
+}
+fn color_reset() {
+    tput sgr0
+}
+
+fn make_printer(use_color) {
+    return fn(prefix, color_fn, text) {
+        if use_color {
+            printf "{prefix}"
+            color_fn()
+            printf "{text}"
+            color_reset()
+            printf "\n"
+        } else {
+            print("{prefix}{text}")
+        }
+    }
+}
+
+fn print_category(print_fn, extension, filenames) {
+    print_fn("Extension: ", blue, extension)
+
+    let count = filenames.len()
+    print_fn("Count: ", green, count)
+
+    print("Files:")
+    for _, filename in filenames {
+        print_fn("  ", magenta_bg, filename)
+    }
+    print()
+}
+
+fn print_search(print_fn, search_result) {
+    print("Search result:")
+    print_fn("  File: ", yellow, search_result[0])
+
+    print_fn("  Has search match: ",
+        fn() {
+            if search_result[1] == true {
+                return green
+            } else {
+                return red
+            }
+        } (),
+        fn() {
+            if search_result[1] == true {
+                return 'Yes'
+            } else {
+                return 'No'
+            }
+        } ()
+    )
+}
+
+
+# Main function
+
+fn main() {
+    let print_fn = make_printer(options.color)
+    let file_list = get_file_list(options["list-dir"])
+
+    # Categories
+    let file_categories = categorize_files_by_extension(file_list)
+    for extension, filenames in file_categories {
+        print_category(print_fn, extension, filenames)
+    }
+
+    # Search
+    let random_number = get_random_number(file_list.len())
+    let search_file = file_list[random_number]
+    let has_search_match = search_text_in_file(search_file, "monzool")
+    let search_result = [search_file, has_search_match]
+    print_search(print_fn, search_result)
+}
+
+main()

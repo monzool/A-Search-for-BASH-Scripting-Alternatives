@@ -1,0 +1,195 @@
+#!/usr/bin/env hush
+
+
+# ① Enter script directory
+
+# ?
+
+
+# ② Parse arguments
+
+function show_help()
+    std.println("Usage: ./sample.hsh [options]")
+    std.println("Options:")
+    std.println("  --list-dir=<dir>     Directory to list. Default: test")
+    std.println("  --no-color           Disable color output. Default: false")
+    std.println("  --help, -h           Show help")
+end
+
+function setup_options(options_defaults, args)
+    let list_dir_regex = std.regex("^--list-dir=(\\w+)$")
+    let no_color_regex = std.regex("^--no-color$")
+
+    let options = options_defaults
+
+    for arg in std.iter(args) do
+        if list_dir_regex.match(arg) then
+            let parts = std.split(arg, "=")
+            if std.len(parts) == 2 then
+                options.list_dir = parts[1]
+            else
+                show_help()
+                std.exit(1)
+            end
+        elseif no_color_regex.match(arg) then
+            options.color = false
+        else
+            show_help()
+            std.exit(0)
+        end
+    end
+
+    return options
+end
+
+
+# ③ Get file list
+
+function get_file_list(dir)
+    let files = ${
+        find "${dir}" -type f -print0
+    }.stdout
+
+    let file_list = std.split(files, "\0")
+    std.pop(file_list) # The split gives an empty string at the end
+    return file_list
+end
+
+
+# ④ Split file names
+
+function get_extension(file)
+    let parts = std.split(file, ".")
+    return parts[std.len(parts)-1]
+end
+
+function get_filename(file)
+    let parts = std.split(file, "/")
+    let filename = parts[std.len(parts)-1]
+    let ext = get_extension(filename)
+
+    filename = std.replace(filename, "." ++ ext, "")
+    return filename
+end
+
+
+# ⑤ Categorize files by extension
+
+function categorize_files_by_extension(file_list)
+    let categorized_files = @[]
+
+    for file in std.iter(file_list) do
+        let extension = get_extension(file)
+        let filename = get_filename(file)
+
+        if std.contains(categorized_files, extension) == false then
+            categorized_files[extension] = []
+        end
+        std.push(categorized_files[extension], filename)
+    end
+    return categorized_files
+end
+
+
+# ⑥ Get a random number
+
+function get_random_number(upper)
+    # Found no random number function. Fallback to shell command
+    # `$RANDOM` is not supported, so using /dev/urandom
+    let random_number = ${
+        od -vAn -N2 -tu2 < /dev/urandom | tr -d '[:space:]'
+    }.stdout
+    return std.int(random_number) % upper
+end
+
+
+# ⑦ Search text in a file
+
+function search_text_in_file(file, text)
+    let search_result = ${
+        grep -q "$text" "$file"
+    }
+    if (std.has_error(search_result)) then
+        return false
+    end
+    return true
+end
+
+
+# ⑧ Print results
+
+let red = function () { tput setaf 1 } end
+let green = function () { tput setaf 2 } end
+let yellow = function () { tput setaf 3 } end
+let blue = function () { tput setaf 4 } end
+let magenta_bg = function () { tput setab 13 } end
+let color_reset = function () { tput sgr0; } end
+
+# There are stdout flushing issues, when mixing std.print and printf
+# Therefor the color printing function also do the non-color printing
+
+function make_printer(use_color)
+    return function (prefix, color_fn, text)
+        { printf "$prefix" }
+
+        if use_color then
+            color_fn()
+        end
+        { printf "$text"; }
+
+        if use_color then
+            color_reset()
+        end
+        std.println()
+    end
+end
+
+function print_category(print_fn, extension, filenames)
+    print_fn("Extension: ", blue, extension)
+
+    let count = std.to_string(std.len(filenames))
+    print_fn("Count: ", green, count)
+
+    std.println("Files:")
+    for filename in std.iter(filenames) do
+        print_fn("  ", magenta_bg, filename)
+    end
+    std.println()
+end
+
+function print_search(print_fn, search_result)
+    std.println("Search result:")
+    print_fn("  File: ", yellow, search_result[0])
+    print_fn("  Has search match: ",
+             if (search_result[1] == true) then green else red end,
+             if (search_result[1] == true) then "Yes" else "No" end)
+end
+
+
+# Main function
+
+function main(args)
+    let options_defaults = @[
+        list_dir: "test",
+        color: true
+    ]
+    let options = setup_options(options_defaults, args)
+
+    let print_fn = make_printer(options.color)
+    let file_list = get_file_list(options.list_dir)
+
+    # Categories
+    let file_categories = categorize_files_by_extension(file_list)
+    for item in std.iter(file_categories) do
+        print_category(print_fn, item.key, item.value)
+    end
+
+    # Search
+    let random_number = get_random_number(std.len(file_list))
+    let search_file = file_list[random_number]
+    let has_search_match = search_text_in_file(search_file, "monzool")
+    let search_result = [search_file, has_search_match]
+    print_search(print_fn, search_result)
+end
+
+main(std.args())
