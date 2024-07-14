@@ -48,6 +48,13 @@ It is my experience that most bash scripts have bugs or are of low quality. Writ
 A secondary objective is to find an embeddable scripting language. If the language could work as both a native scripting language and an embeddable scripting language, it would be preferable. It must embed into a C/C++ ecosystem.
 
 
+This post is available in two places
+
+- On the monzool.net [blog](https://monzool.net/blog/2017/07/04/a-search-for-bash-scripting-alternatives/), for a pretty viewing.
+
+- On [github](https://github.com/monzool/A-Search-for-BASH-Scripting-Alternatives) where the source code is also available. This post is the *Take1* part of this series (direct preview link here: [preview](https://github.com/monzool/A-Search-for-BASH-Scripting-Alternatives/blob/master/Take1/Take1.md))
+
+
 ## 2. Not Meeting Criterias
 
 ### Perl

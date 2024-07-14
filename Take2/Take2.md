@@ -7,7 +7,7 @@ post_date: 2024-07-13 09:23:44
 ---
 
 <h1 style="color:DodgerBlue;">
-A second search for a bash script alternatives
+A second search for bash scripting alternatives
 </h1>
 
 SHELL SCRIPTING IS something most programmers will encounter often - especially if doing dev-ops, automation and general Linux work. Unfortunately we are mostly stuck with bash. There surely must be better alternatives...
