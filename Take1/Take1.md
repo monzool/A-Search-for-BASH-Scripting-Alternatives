@@ -25,7 +25,7 @@ post_date: 2017-07-04 09:23:44
 
 **Bash scripting is** http://mywiki.wooledge.org/BashWeaknesses
 
-IT IS NO secret that bash scripting has its pitfalls and oddities. Subtle mistakes are easy to make given its many quirks and arcane syntax rules. So this documents seek to investigate if a language can be found which embodies the "Bash - the good parts" only.
+**IT IS NO** secret that bash scripting has its pitfalls and oddities. Subtle mistakes are easy to make given its many quirks and arcane syntax rules. So this documents seek to investigate if a language can be found which embodies the "Bash - the good parts" only.
 
 The idea for this document originated at my place of work. Our products are linux based, and in the development department all local workstations are Ubuntu installations, so bash scripting is a part of the heritage that automatically comes from using a linux system. Most co-workers will use bash for a quick means to and end to automate some build steps or tweaking testing facilities. A minor group use bash for configuring and tweaking an embedded linux platform. Bash scripts *can* be simple, but most often scripts grow in size and complexity over time and bugs will sneak in. Other times a script is rushed and the implementer is fooled by the, at first sight, simplicity of bash and falls into its many pitfalls and bugs appear in even small scripts.
 

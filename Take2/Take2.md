@@ -10,7 +10,7 @@ post_date: 2024-07-13 09:23:44
 A second search for bash scripting alternatives
 </h1>
 
-SHELL SCRIPTING IS something most programmers will encounter often - especially if doing dev-ops, automation and general Linux work. Unfortunately we are mostly stuck with bash. There surely must be better alternatives...
+**SHELL SCRIPTING IS** something most programmers will encounter often - especially if doing dev-ops, automation and general Linux work. Unfortunately we are mostly stuck with bash. There surely must be better alternatives...
 
 I have been in search for a bash replacement [before](https://monzool.net/blog/2017/07/04/a-search-for-bash-scripting-alternatives/#finalists). My conclusions was that I would try out: [scsh](https://scsh.net/), [luash](https://github.com/zserge/luash) and [mruby](https://mruby.org/). I'm addressing that experience in Addendum [Take 1](#addendum-take-1-anchor),
 
@@ -858,7 +858,7 @@ error: "invalid regex" ("regex parse error:\n    --(\\w+)=?(\\w+)?\n       ^^\ne
 
 That matches an [issue](https://github.com/hush-shell/hush/issues/38) on the hush issue tracker, with a [fix](https://github.com/hush-shell/hush/pull/39) merged in May 2023. I then looked at the [crate](https://crates.io/crates/hush) and it was last updated in May 14th of 2022. So I cloned the source and build and installed with cargo.
 
-The regex now worked; however, now all my `std.print` would no longer end with printing a newline, making everything print on one long line. The documentation on https://hush-shell.github.io/std.html did not mention `std.println`... but it worked. That [feature](https://github.com/hush-shell/hush/issues/22) was added May 24th of 2022. I got a bit curious here, on how much had changed in the last two years. In the *issues closed* section there is only a limited amount of stuff added. Primarily `std.println` and `elseif`. In the *open issues* section there was not a whole lot either. There was this thing though: hush [cannot do filesystem queries] yet. Reported in May 2022, is that hush lacks features like checking if a file exist, if a file is a directory etc. 
+The regex now worked; however, now all my `std.print` would no longer end with printing a newline, making everything print on one long line. The documentation on the [standard library](https://hush-shell.github.io/std.html) did not mention `std.println`... but it worked. That [feature](https://github.com/hush-shell/hush/issues/22) was added May 24th of 2022. I got a bit curious here, on how much had changed in the last two years. In the *issues closed* section there is only a limited amount of stuff added. Primarily `std.println` and `elseif`. In the *open issues* section there was not a whole lot either. There was this thing though: hush [cannot do filesystem queries] yet. Reported in May 2022, is that hush lacks features like checking if a file exist, if a file is a directory etc. 
 
 From the issue responses its clear that the author do not have time to maintain the project - but its not abandonware. Just recently, a [pull request](https://github.com/hush-shell/hush/pull/48) was merged. Anyway, the missing file operations is not a deal breaker. Hush have [*command blocks*](https://github.com/hush-shell/hush/issues/20) where we can execute shell code. 
 
@@ -1282,7 +1282,7 @@ Enjoyment: ⭐⭐⭐⭐☆
 Function return values
 </h2>
 
-"Funny" enough, just like for the other shell-first languages elvish, murex and ion, I found no documentation on how to return values from a [nushell function](https://www.nushell.sh/book/custom_commands.html). There is documented something about function [type signatures]()https://www.nushell.sh/book/command_signature.html that also covers function return types. Actually functions in nushell are called *commands* and appear more to resemble, calling a subscript in bash. It seems that commands stream output (to stdout and/or stderr) and can then be picked up by the next command. Like murex (and perhaps also elvish?) this steam can be formatted to different types
+"Funny" enough, just like for the other shell-first languages elvish, murex and ion, I found no documentation on how to return values from a [nushell function](https://www.nushell.sh/book/custom_commands.html). There is documented something about function [type signatures](https://www.nushell.sh/book/command_signature.html that also covers function return types. Actually functions in nushell are called *commands* and appear more to resemble, calling a subscript in bash. It seems that commands stream output (to stdout and/or stderr) and can then be picked up by the next command. Like murex (and perhaps also elvish?) this steam can be formatted to different types
 
 I think what makes these "shell first, scripting second" projects a little difficult to consume from a scripting angle, is that most commands are documented like they would be used in a shell.
 
@@ -1318,6 +1318,7 @@ match $response.exit_code {
 ```
 
 This example shows how to:
+
 - call an external program
 - capture the response
 - evaluate the exit code
@@ -1328,7 +1329,7 @@ Documentation for nushell is otherwise quite good. Nushell have an incredible am
 
 The nushell introduction have this quote, which I think it true. Nushell is very different from bash
 
-****Thinking in Nushell:** If you're used to using mutable variables for different tasks, it will take some time to learn how to do each task in a more functional style.*
+  ***Thinking in Nushell**: If you're used to using mutable variables for different tasks, it will take some time to learn how to do each task in a more functional style.*
 
 
 <h2 style="color:MediumVioletRed;">
@@ -1941,7 +1942,7 @@ I have a real hard time locating stuff in the documentation. The titles are not 
 
 ![ysh_doc_toc](assets/ysh_doc_toc.png)
 
-Update: found this: https://www.oilshell.org/release/latest/doc/ref/toc-ysh.html
+Update: found this: [https://www.oilshell.org/release/latest/doc/ref/toc-ysh.html](https://www.oilshell.org/release/latest/doc/ref/toc-ysh.html)
 
 ### Returning values from `proc`
 
@@ -2276,11 +2277,12 @@ Babashka
 Babashka is super interesting. The sole purpose of babashka is to make Clojure a feasible option for scripting. Its a well made clojure implementation that features super fast start up times due to its use of [GraalVM](https://www.graalvm.org/)
 
 Here are some relevant links:
-Good introduction: https://www.braveclojure.com/quests/babooka/
-Running shell commands: https://github.com/babashka/process
-Babashka as a bash alternative: https://presumably.de/how-to-do-things-with-babashka.html
-Easier packaging of single file executable using [bbb](https://github.com/nikvdp/bbb)
-File handling library: https://github.com/babashka/fs
+
+- Good introduction: [https://www.braveclojure.com/quests/babooka/](https://www.braveclojure.com/quests/babooka/)
+- Running shell commands: [process](https://github.com/babashka/process)
+- Babashka as a bash alternative: [how-to-do-things-with-babashka](https://presumably.de/how-to-do-things-with-babashka.html)
+- Easier packaging of single file executable using [bbb](https://github.com/nikvdp/bbb)
+- File handling library: [fs](https://github.com/babashka/fs)
 
 ### Embedded system application
 
