@@ -2294,6 +2294,9 @@ Then again, I am not sure if that is even a requirement. Babashka uses [GraalVM]
 
 I think it's a safe assumption, that if I go with babashka, I keep on bash'ing on my embedded platforms. I would also add, that I have the feeling that babashka is made more for *scripting*, than for *shell scripting* 🤔
 
+<br/>
+
+Update \[2024-12-05]: [Jakob Dundalek](https://github.com/dundalek) has been kind to supply a Babashka example 🥳
 
 <br/>
 <br/>
